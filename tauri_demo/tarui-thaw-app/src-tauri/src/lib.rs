@@ -4,7 +4,8 @@ use tauri_plugin_http::reqwest;
 
 #[tauri::command]
 async fn http(name: String) -> String {
-    let res = reqwest::get("http://10.5.8.81:8000/").await;
+    let url = format!("http://10.5.8.81:8000/{}", name);
+    let res = reqwest::get(&url).await;
 
     let status = match res {
         Ok(data) => data.status().to_string(),

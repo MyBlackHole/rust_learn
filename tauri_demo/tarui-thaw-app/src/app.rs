@@ -1,5 +1,5 @@
-use leptos::task::spawn_local;
 use leptos::prelude::*;
+use leptos::task::spawn_local;
 use serde::{Deserialize, Serialize};
 use thaw::*;
 use wasm_bindgen::prelude::*;
@@ -19,9 +19,10 @@ struct GreetArgs<'a> {
 pub fn App() -> impl IntoView {
     let (greet_msg, set_greet_msg) = signal(String::new());
 
-    let http = move |_| {
+    let http = move |name: &str| {
+        let name = name.to_string();
         spawn_local(async move {
-            let args = serde_wasm_bindgen::to_value(&GreetArgs { name: "black" }).unwrap();
+            let args = serde_wasm_bindgen::to_value(&GreetArgs { name: &name }).unwrap();
             let new_msg = invoke("http", args).await.as_string().unwrap();
             set_greet_msg.set(new_msg);
         });
@@ -44,10 +45,10 @@ pub fn App() -> impl IntoView {
             <p>{ move || greet_msg.get() }</p>
             </CardFooter>
             <ButtonGroup>
-                <Button on:click=http size=ButtonSize::Large>"开"</Button>
-                <Button on:click=http size=ButtonSize::Large>"关"</Button>
-                <Button on:click=http size=ButtonSize::Large>"停"</Button>
-                <Button on:click=http size=ButtonSize::Large>"锁"</Button>
+                <Button on:click=move |_| {http("open");} size=ButtonSize::Large>"开"</Button>
+                <Button on:click=move |_| {http("close");} size=ButtonSize::Large>"关"</Button>
+                <Button on:click=move |_| {http("stop");} size=ButtonSize::Large>"停"</Button>
+                <Button on:click=move |_| {http("lock");} size=ButtonSize::Large>"锁"</Button>
             </ButtonGroup>
         </Card>
     }
