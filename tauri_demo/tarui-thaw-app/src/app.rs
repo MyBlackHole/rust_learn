@@ -29,27 +29,45 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <Card>
-            <CardHeader>
-                <Body1>
-                    <b>"Header"</b>" 2025-01-23"
-                </Body1>
-                <CardHeaderDescription slot>
-                    <Caption1>"卷闸门"</Caption1>
-                </CardHeaderDescription>
-            </CardHeader>
-            <CardPreview>
-                <img src="public/2c3b013418d55659.jpg" style="width: 100%"/>
-            </CardPreview>
-            <CardFooter>
-            <p>{ move || greet_msg.get() }</p>
-            </CardFooter>
-            <ButtonGroup>
-                <Button on:click=move |_| {http("open");} size=ButtonSize::Large>"开"</Button>
-                <Button on:click=move |_| {http("close");} size=ButtonSize::Large>"关"</Button>
-                <Button on:click=move |_| {http("stop");} size=ButtonSize::Large>"停"</Button>
-                <Button on:click=move |_| {http("lock");} size=ButtonSize::Large>"锁"</Button>
-            </ButtonGroup>
-        </Card>
+        <Layout>
+            <LayoutHeader attr:style="background-color: #0078ffaa; padding: 20px;">
+                <Avatar shape=AvatarShape::Square size=36 />
+                "卷闸门"
+            </LayoutHeader>
+            <Layout attr:style="background-color: #0078ff88; padding: 20px;">
+                <Grid>
+                    <GridItem>
+                        <Image src="public/2c3b013418d55659.jpg" attr:style="width: 100%" shape=ImageShape::Rounded />
+                    </GridItem>
+                    <GridItem>
+                        <p>{ move || greet_msg.get() }</p>
+                    </GridItem>
+                    <GridItem>
+                        <Grid cols=2>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button attr:style="color: white;" on:click=move |_| {http("open");}>"开"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button on:click=move |_| {http("close");} size=ButtonSize::Large>"关"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button on:click=move |_| {http("stop");} size=ButtonSize::Large>"停"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button on:click=move |_| {http("lock");} size=ButtonSize::Large>"锁"</Button>
+                                </Divider>
+                            </GridItem>
+                        </Grid>
+                    </GridItem>
+                </Grid>
+            </Layout>
+        </Layout>
     }
 }

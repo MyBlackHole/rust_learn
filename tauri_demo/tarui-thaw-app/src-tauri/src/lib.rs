@@ -1,11 +1,13 @@
-use tauri_plugin_http::reqwest;
+use tauri_plugin_http::reqwest::Client;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
 #[tauri::command]
 async fn http(name: String) -> String {
-    let url = format!("http://10.5.8.81:8000/{}", name);
-    let res = reqwest::get(&url).await;
+    let url = "http://www.iotapp.com/iot-app";
+    //let url = "http://192.168.125.9/iot-app";
+    let res = Client::new().get(url).header("name", &name).send().await;
+    //let res = reqwest::get(url).await;
 
     let status = match res {
         Ok(data) => data.status().to_string(),
