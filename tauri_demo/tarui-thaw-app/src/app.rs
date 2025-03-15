@@ -11,19 +11,19 @@ extern "C" {
 }
 
 #[derive(Serialize, Deserialize)]
-struct GreetArgs<'a> {
-    name: &'a str,
+struct TcpArgs {
+    id: u32,
+    cmd: u32,
 }
 
 #[component]
 pub fn App() -> impl IntoView {
     let (greet_msg, set_greet_msg) = signal(String::new());
 
-    let http = move |name: &str| {
-        let name = name.to_string();
+    let tcp = move |id: u32, cmd: u32| {
         spawn_local(async move {
-            let args = serde_wasm_bindgen::to_value(&GreetArgs { name: &name }).unwrap();
-            let new_msg = invoke("http", args).await.as_string().unwrap();
+            let args = serde_wasm_bindgen::to_value(&TcpArgs { id, cmd }).unwrap();
+            let new_msg = invoke("tcp", args).await.as_string().unwrap();
             set_greet_msg.set(new_msg);
         });
     };
@@ -46,22 +46,46 @@ pub fn App() -> impl IntoView {
                         <Grid cols=2>
                             <GridItem attr:style="padding: 20px;">
                                 <Divider>
-                                    <Button attr:style="color: white;" on:click=move |_| {http("open");}>"开"</Button>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;"  on:click=move |_| {tcp(0, 0);}>"开"</Button>
                                 </Divider>
                             </GridItem>
                             <GridItem attr:style="padding: 20px;">
                                 <Divider>
-                                    <Button on:click=move |_| {http("close");} size=ButtonSize::Large>"关"</Button>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(0, 1);}>"关"</Button>
                                 </Divider>
                             </GridItem>
                             <GridItem attr:style="padding: 20px;">
                                 <Divider>
-                                    <Button on:click=move |_| {http("stop");} size=ButtonSize::Large>"停"</Button>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(0, 2);}>"停"</Button>
                                 </Divider>
                             </GridItem>
                             <GridItem attr:style="padding: 20px;">
                                 <Divider>
-                                    <Button on:click=move |_| {http("lock");} size=ButtonSize::Large>"锁"</Button>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(0, 3);}>"锁"</Button>
+                                </Divider>
+                            </GridItem>
+                        </Grid>
+                    </GridItem>
+                    <GridItem>
+                        <Grid cols=2>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;"  on:click=move |_| {tcp(1, 0);}>"开"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(1, 1);}>"关"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(1, 2);}>"停"</Button>
+                                </Divider>
+                            </GridItem>
+                            <GridItem attr:style="padding: 20px;">
+                                <Divider>
+                                    <Button shape=ButtonShape::Circular attr:style="background-color: #ffffff; color: #000000;" on:click=move |_| {tcp(1, 3);}>"锁"</Button>
                                 </Divider>
                             </GridItem>
                         </Grid>
